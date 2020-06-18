@@ -4,16 +4,20 @@
 	<head>
 		<link rel = "stylesheet" href = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel = "stylesheet" href = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-		<link href = "//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel = "stylesheet" type = "text/css">
-		<link rel = "Stylesheet" href = "{% static 'css/blog.css' %}">
-		<title>Blog</title>
+		<link href = "https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel = "stylesheet">
+		<link rel = "stylesheet" href = "{% static 'css/blog.css' %}">
+		<link rel = "icon" href = "{% static 'imgs/cpu-brain.png' %}">
+		{% block title %}
+		{% endblock %}
 	</head>
 	<body>
 		<div class = "page-header">
 			{% if user.is_authenticated %}
 				<a href = "{% url 'post_new' %}" class = "top-menu"><span class = "glyphicon glyphicon-plus"></span></a>
 			{% endif %}
+			<img src = "{% static 'imgs/cpu-brain.png' %}" alt = "Brain with CPU pattern" style = "float:right; width:130px; height:110px; margin-right: 100px">
 			<h1><a href = "/">My Blog</a></h1>
+			<h4>For Computer Science Bridging Coursework</h4>
 		</div>
 		<div class = "content container">
 			<div class = "row">

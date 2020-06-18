@@ -1,22 +1,27 @@
-h1 a, h2 a {
-	color: #C25100;
-	font-family: 'Lobster';
-}
-
 body {
 	padding-left: 15px;
 }
 
 .page-header {
-	background-color: #C25100;
+	background-color: #140FAB;
 	margin-top: 0;
 	padding: 20px 20px 20px 40px;
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
-	color: #ffffff;
+	color: #E7EFC5;
 	font-size: 36pt;
 	text-decoration: none;
+}
+
+.page-header h1 a:hover {
+	color: #ACCE2A;
+	font-size: 36pt;
+	text-decoration: none;
+}
+
+.page-header h4 {
+	color: #E7EFC5;
 }
 
 .content {
@@ -24,7 +29,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-	font-family: 'Lobster', cursive;
+	font-family: 'Aldrich', sans-serif;
 }
 
 .date {
@@ -33,6 +38,7 @@ h1, h2, h3, h4 {
 
 .save {
 	float: right;
+	margin-bottom: 70px;
 }
 
 .post-form textarea, .post-form input {

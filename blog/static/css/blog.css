@@ -20,6 +20,13 @@
 	color: #E7EFC5;
 }
 
+.header-image {
+	float: right;
+	width: 130px;
+	height: 110px;
+	margin-right: 100px;
+}
+
 .content {
 	margin-left: 40px;
 }

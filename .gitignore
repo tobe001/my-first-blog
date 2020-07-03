@@ -6,3 +6,5 @@ virtualenv
 db.sqlite3
 /static
 .DS_Store
+geckodriver.exe
+geckodriver.log

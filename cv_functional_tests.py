@@ -42,7 +42,7 @@ class CVTest(unittest.TestCase):
 	
 	def check_placeholder_reference_text(self):
 		references_section = self.browser.find_element_by_id("id_references")
-		self.assertEqual(refernces_section.find_element_by_tag_name("p").text, "References available on request.")
+		self.assertEqual(references_section.find_element_by_tag_name("p").text, "References available on request.")
 	
 	def test_fill_cv_and_retrieve(self):
 		

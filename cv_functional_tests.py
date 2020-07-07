@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 class CVTest(unittest.TestCase):
@@ -9,15 +11,49 @@ class CVTest(unittest.TestCase):
 	def tearDown(self):
 		self.browser.quit()
 	
+	def check_section_header(self, heading_text):
+		headings = self.browser.find_elements_by_tag_name("h2")
+		self.assertTrue(any(heading.text == heading_text for heading in headings))
+	
+	def check_input_boxes(self, form_id, box_ids):
+		form = self.browser.find_element_by_id(form_id)
+		for id in box_ids:
+			box = form.find_element_by_id(id)
+			self.assertIn("Enter", box.get_attribute("placeholder"))
+	
+	def check_headers(self):
+		self.check_section_header("Profile")
+		self.check_section_header("Key Skills")
+		self.check_section_header("Education")
+		self.check_section_header("Work Experience")
+		self.check_section_header("Voluntary Experience")
+		self.check_section_header("Additional Projects and Achievements")
+		self.check_section_header("Additional Activities, Skills and Hobbies")
+		self.check_section_header("References")
+	
+	def check_forms(self):
+		self.check_input_boxes("id_skills_form", ["id_skills_input_text"])
+		self.check_input_boxes("id_education_form", ["id_education_input_start_year", "id_education_input_end_year", "id_education_input_institution", "id_education_input_course_title", "id_education_input_text"])
+		self.check_input_boxes("id_experience_form", ["id_experience_input_start_year", "id_experience_input_end_year", "id_experience_input_company", "id_experience_input_role", "id_experience_input_text"])
+		self.check_input_boxes("id_volunteering_form", ["id_volunteering_input_start_year", "id_volunteering_input_end_year", "id_volunteering_input_company", "id_volunteering_input_role", "id_volunteering_input_text"])
+		self.check_input_boxes("id_projects_form", ["id_projects_input_text"])
+		self.check_input_boxes("id_hobbies_form", ["id_hobbies_input_text"])
+		self.check_input_boxes("id_references_form", ["id_references_input_name", "id_references_input_relevance", "id_references_input_phone", "id_references_input_email"])
+	
+	def check_placeholder_reference_text(self):
+		references_section = self.browser.find_element_by_id("id_references")
+		self.assertEqual(refernces_section.find_element_by_tag_name("p").text, "References available on request.")
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
 		#Page title should mention the CV.
 		self.browser.get("http://127.0.0.1:8000/cv")
 		self.assertIn("CV", self.browser.title)
-		self.fail("Finish writing tests!")
 		
 		#Page should include my name.
+		header_text = self.browser.find_element_by_tag_name("h1").text
+		self.assertIn("Thomas Beckett", header_text)
 		
 		#Page should contain appropriate section headers:
 		#Profile
@@ -28,6 +64,7 @@ class CVTest(unittest.TestCase):
 		#Additional Projects and Achievements
 		#Additional Activities, Skills and Hobbies
 		#References
+		self.check_headers()
 		
 		#Page should contain input boxes for:
 		#Key Skills (Text)
@@ -37,14 +74,29 @@ class CVTest(unittest.TestCase):
 		#Additional Projects and Achievements (Text)
 		#Additional Activities, Skills and Hobbies (Text)
 		#References (Name, Relevance, Phone, Email)
+		self.check_forms()
 		
 		#In the absence of any references, the References section should read "References available on request."
+		self.check_placeholder_reference_text()
 		
 		#User enters new Key Skill, "Programming Skills" and hits enter.
 		#Page should refresh and now list "Programming Skills" in the Key Skills section, along with all previous content.
+		skills_input_text_box = self.browser.find_element_by_id("id_skills_form").find_element_by_id("id_skills_input_text")
+		skills_input_text_box.send_keys("Programming Skills")
+		skills_input_text_box.send_keys(Keys.ENTER)
+		time.sleep(1)
+		
+		skills_section = self.browser.find_element_by_id("id_skills")
+		skill_items = skills_section.find_elements_by_tag_name("li")
+		self.assertTrue(any(skill.text == "Programming Skills" for skill in skill_items))
+		
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Key Skill, "Time Management" and hits enter.
 		#Page should refresh and now list "Time Management" in the Key Skills section, along with all previous content.
+		self.fail("Finish writing tests!")
 		
 		#User enters new Education Item (2018, 2022, University of Birmingham, MSci Mathematics and Computer Science, Description of course and results.) and hits enter.
 		#Page should refresh and now list "2018-2022: University of Birmingham, MSci Mathematics and Computer Science" in Education section, along with all previous content.

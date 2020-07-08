@@ -1,7 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from cv.models import KeySkill
 
 # Create your views here.
 
 def cv(request):
-	return render(request, "cv.html", {"new_key_skill_text": request.POST.get("key_skill_text", "")})
+	if request.method == "POST":
+		KeySkill.objects.create(text = request.POST["key_skill_text"])
+		return redirect("/cv/")
+	
+	skills = KeySkill.objects.all()
+	return render(request, "cv.html", {"skills": skills})

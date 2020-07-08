@@ -8,7 +8,9 @@
 		<div id = "id_skills">
 			<h2>Key Skills</h2>
 			<ul>
-				<li>{{ new_key_skill_text }}</li>
+				{% for skill in skills %}
+					<li>{{ skill.text }}</li>
+				{% endfor %}
 			</ul>
 			<form id = "id_skills_form" method = "POST">
 				<input name = "key_skill_text" id = "id_skills_input_text" placeholder = "Enter a new skill"/>

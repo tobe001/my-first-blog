@@ -7,8 +7,13 @@
 		<h2>Profile</h2>
 		<div id = "id_skills">
 			<h2>Key Skills</h2>
-			<form id = "id_skills_form">
-				<input id = "id_skills_input_text" placeholder = "Enter a new skill"/>
+			<ul>
+				<li>{{ new_key_skill_text }}</li>
+			</ul>
+			<form id = "id_skills_form" method = "POST">
+				<input name = "key_skill_text" id = "id_skills_input_text" placeholder = "Enter a new skill"/>
+				<button>Save</button>
+				{% csrf_token %}
 			</form>
 		</div>
 		<h2>Education</h2>
@@ -18,6 +23,7 @@
 			<input id = "id_education_input_institution" placeholder = "Enter name of institution"/>
 			<input id = "id_education_input_course_title" placeholder = "Enter course title"/>
 			<input id = "id_education_input_text" placeholder = "Enter further details about the course"/>
+			<button>Save</button>
 		</form>
 		<h2>Work Experience</h2>
 		<form id = "id_experience_form">
@@ -26,6 +32,7 @@
 			<input id = "id_experience_input_company" placeholder = "Enter name of employer"/>
 			<input id = "id_experience_input_role" placeholder = "Enter job title"/>
 			<input id = "id_experience_input_text" placeholder = "Enter further detials about the job"/>
+			<button>Save</button>
 		</form>
 		<h2>Voluntary Experience</h2>
 		<form id = "id_volunteering_form">
@@ -34,14 +41,17 @@
 			<input id = "id_volunteering_input_company" placeholder = "Enter name of company/organisation"/>
 			<input id = "id_volunteering_input_role" placeholder = "Enter name of role"/>
 			<input id = "id_volunteering_input_text" placeholder = "Enter further details about the placement"/>
+			<button>Save</button>
 		</form>
 		<h2>Additional Projects and Achievements</h2>
 		<form id = "id_projects_form">
 			<input id = "id_projects_input_text" placeholder = "Enter details of a new project or achievement"/>
+			<button>Save</button>
 		</form>
 		<h2>Additional Activities, Skills and Hobbies</h2>
 		<form id = "id_hobbies_form">
 			<input id = "id_hobbies_input_text" placeholder = "Enter a new activity, skill or hobby"/>
+			<button>Save</button>
 		</form>
 		<div id = "id_references">
 			<h2>References</h2>
@@ -51,6 +61,7 @@
 				<input id = "id_references_input_relevance" placeholder = "Enter relation of reference to you"/>
 				<input id = "id_references_input_phone" placeholder = "Enter reference's phone number"/>
 				<input id = "id_references_input_email" placeholder = "Enter reference's email address"/>
+				<button>Save</button>
 			</form>
 		</div>
 	</body>

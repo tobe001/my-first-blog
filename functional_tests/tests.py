@@ -1,9 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
 
-class CVTest(unittest.TestCase):
+class CVTest(LiveServerTestCase):
 	
 	def setUp(self):
 		self.browser = webdriver.Firefox()
@@ -56,7 +56,7 @@ class CVTest(unittest.TestCase):
 		
 		#User navigates to site's CV page.
 		#Page title should mention the CV.
-		self.browser.get("http://127.0.0.1:8000/cv")
+		self.browser.get(self.live_server_url + "/cv/")
 		self.assertIn("CV", self.browser.title)
 		
 		#Page should include my name.
@@ -171,6 +171,3 @@ class CVTest(unittest.TestCase):
 		
 		#User exits browser, concluding test.
 	
-
-if __name__ == "__main__":
-	unittest.main(warnings = "ignore")

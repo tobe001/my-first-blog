@@ -46,6 +46,12 @@ class CVTest(unittest.TestCase):
 		references_section = self.browser.find_element_by_id("id_references")
 		self.assertEqual(references_section.find_element_by_tag_name("p").text, "References available on request.")
 	
+	def check_for_key_skills(self, skills):
+		skills_section = self.browser.find_element_by_id("id_skills")
+		skill_items = skills_section.find_elements_by_tag_name("li")
+		for skill in skills:
+			self.assertIn(skill, [item.text for item in skill_items])
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -91,10 +97,7 @@ class CVTest(unittest.TestCase):
 		skills_save_button.click()
 		time.sleep(1)
 		
-		skills_section = self.browser.find_element_by_id("id_skills")
-		skill_items = skills_section.find_elements_by_tag_name("li")
-		self.assertIn("Programming Skills", [skill.text for skill in skill_items])
-		
+		self.check_for_key_skills(["Programming Skills"])
 		self.check_headers()
 		self.check_forms()
 		self.check_placeholder_reference_text()
@@ -108,11 +111,7 @@ class CVTest(unittest.TestCase):
 		skills_save_button.click()
 		time.sleep(1)
 		
-		skills_section = self.browser.find_element_by_id("id_skills")
-		skill_items = skills_section.find_elements_by_tag_name("li")
-		self.assertIn("Time Management", [skill.text for skill in skill_items])
-		self.assertIn("Programming Skills", [skill.text for skill in skill_items])
-		
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
 		self.check_headers()
 		self.check_forms()
 		self.check_placeholder_reference_text()

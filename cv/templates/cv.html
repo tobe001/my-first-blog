@@ -13,7 +13,7 @@
 				{% endfor %}
 			</ul>
 			<form id = "id_skills_form" method = "POST">
-				<input name = "key_skill_text" id = "id_skills_input_text" placeholder = "Enter a new skill"/>
+				{{ skills_form }}
 				<button>Save</button>
 				{% csrf_token %}
 			</form>

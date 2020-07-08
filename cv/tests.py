@@ -10,14 +10,14 @@ class CVPageTest(TestCase):
 		self.assertTemplateUsed(response, "cv.html")
 	
 	def test_saves_key_skills_POST_request(self):
-		self.client.post("/cv/", data = {"key_skill_text": "This is a new key skill."})
+		self.client.post("/cv/", data = {"skills_input_text": "This is a new key skill."})
 		
 		self.assertEqual(KeySkill.objects.count(), 1)
 		new_key_skill = KeySkill.objects.first()
 		self.assertEqual(new_key_skill.text, "This is a new key skill.")
 	
 	def test_redirects_after_key_skills_POST_request(self):
-		response = self.client.post("/cv/", data = {"key_skill_text": "This is a new key skill."})
+		response = self.client.post("/cv/", data = {"skills_input_text": "This is a new key skill."})
 		
 		self.assertEqual(response.status_code, 302)
 		self.assertEqual(response["location"], "/cv/")

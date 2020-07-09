@@ -4,3 +4,10 @@ from django.db import models
 
 class KeySkill(models.Model):
 	text = models.CharField(max_length = 100, default = "")
+
+class Education(models.Model):
+	start_year = models.IntegerField(default = 0)
+	end_year = models.IntegerField(default = 9999)
+	institution = models.CharField(max_length = 100, default = "")
+	course_title = models.CharField(max_length = 100, default = "", blank = True)
+	text = models.TextField(default = "")

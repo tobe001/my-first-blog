@@ -52,6 +52,15 @@ class CVTest(LiveServerTestCase):
 		for skill in skills:
 			self.assertIn(skill, [item.text for item in skill_items])
 	
+	def check_for_education_items_in_order(self, items):
+		education_section = self.browser.find_element_by_id("id_education")
+		for i in range(len(items)):
+			education_item = education_section.find_element_by_id("id_education_" + str(i+1))
+			education_header = education_item.find_element_by_tag_name("h3").text
+			self.assertEqual(education_header, items[i]["header"])
+			education_text = education_item.find_element_by_tag_name("p").text
+			self.assertEqual(education_text, items[i]["text"])
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -119,17 +128,58 @@ class CVTest(LiveServerTestCase):
 		#User enters new Education Item (2018, 2022, University of Birmingham, MSci Mathematics and Computer Science, Description of course and results.) and presses "Save" button.
 		#Page should refresh and now list "2018-2022: University of Birmingham, MSci Mathematics and Computer Science" in Education section, along with all previous content.
 		#Page should also read "Description of course and results." below this.
-		self.fail("Finish writing tests!")
+		education_form = self.browser.find_element_by_id("id_education_form")
+		education_input_start_year_box = education_form.find_element_by_id("id_education_input_start_year")
+		education_input_start_year_box.send_keys("2018")
+		education_input_end_year_box = education_form.find_element_by_id("id_education_input_end_year")
+		education_input_end_year_box.send_keys("2022")
+		education_input_institution_box = education_form.find_element_by_id("id_education_input_institution")
+		education_input_institution_box.send_keys("University of Birmingham")
+		education_input_course_box = education_form.find_element_by_id("id_education_input_course_title")
+		education_input_course_box.send_keys("MSci Mathematics and Computer Science")
+		education_input_text_box = education_form.find_element_by_id("id_education_input_text")
+		education_input_text_box.send_keys("Description of course and results.")
+		education_save_button = education_form.find_element_by_tag_name("button")
+		education_save_button.click()
+		time.sleep(1)
+		
+		education_item_1 = {"header": "2018-2022: University of Birmingham, MSci Mathematics and Computer Science", "text": "Description of course and results."}
+		self.check_for_education_items_in_order([education_item_1])
+		
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Eductaion Item (2020, 2020, Abnormal School, (NO COURSE TITLE), Description of course and results.) and presses "Save" button.
 		#Page should now refresh and list "2020: Abnormal School" in Education section, along with all previous content.
 		#Page should also read "Description of course and results." below this.
+		education_form = self.browser.find_element_by_id("id_education_form")
+		education_input_start_year_box = education_form.find_element_by_id("id_education_input_start_year")
+		education_input_start_year_box.send_keys("2020")
+		education_input_end_year_box = education_form.find_element_by_id("id_education_input_end_year")
+		education_input_end_year_box.send_keys("2020")
+		education_input_institution_box = education_form.find_element_by_id("id_education_input_institution")
+		education_input_institution_box.send_keys("Abnormal School")
+		education_input_text_box = education_form.find_element_by_id("id_education_input_text")
+		education_input_text_box.send_keys("Description of course and results.")
+		education_save_button = education_form.find_element_by_tag_name("button")
+		education_save_button.click()
+		time.sleep(1)
 		
+		education_item_2 = {"header": "2020: Abnormal School", "text": "Description of course and results."}
 		#Due to start year, "Abnormal School" should appear above "University of Birmingham".
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Work Experience item (2015, 2016, Company 1, Intern, Description of job role.) and presses "Save" button.
 		#Page should refresh and now list "2015-2016: Company 1, Intern" in Work Experience section, along with all previous content.
 		#Page should also read "Description of job role." below this.
+		self.fail("Finish writing tests!")
 		
 		#User enters new Work Experience item (2018, 2018, Company 2, Intern, Description of job role.) and presses "Save" button.
 		#Page should refresh and now list "2018: Company 2, Intern" in Work Experience section, along with all previous content.

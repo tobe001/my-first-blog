@@ -45,11 +45,7 @@
 				</div>
 			{% endfor %}
 			<form id = "id_experience_form" method = "POST">
-				<input id = "id_experience_input_start_year" name = "experience_input_start_year" placeholder = "Enter employment start year"/>
-				<input id = "id_experience_input_end_year" name = "experience_input_end_year" placeholder = "Enter employment end year"/>
-				<input id = "id_experience_input_company" name = "experience_input_company" placeholder = "Enter name of employer"/>
-				<input id = "id_experience_input_role" name = "experience_input_role" placeholder = "Enter job title"/>
-				<input id = "id_experience_input_text" name = "experience_input_text" placeholder = "Enter further detials about the job"/>
+				{{ experience_form.as_p }}
 				<button>Save</button>
 				{% csrf_token %}
 			</form>

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education
+from cv.models import KeySkill, Education, Experience
 
 # Create your tests here.
 
@@ -60,6 +60,32 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("2018-2022: Institution 1, Course 1", response.content.decode())
 		self.assertIn("2011-2016: Institution 2, Course 2", response.content.decode())
+	
+	def test_saves_experience_POST_request(self):
+		self.client.post("/cv/", data = {"experience_input_start_year": "2018", "experience_input_end_year": "2022", "experience_input_company": "Company", "experience_input_role": "Job Role", "experience_input_text": "Details"})
+		
+		self.assertEqual(Experience.objects.count(), 1)
+		new_experience = Experience.objects.first()
+		self.assertEqual(new_experience.start_year, 2018)
+		self.assertEqual(new_experience.end_year, 2022)
+		self.assertEqual(new_experience.company, "Company")
+		self.assertEqual(new_experience.role, "Job Role")
+		self.assertEqual(new_experience.text, "Details")
+	
+	def test_redirects_after_experience_POST_request(self):
+		response = self.client.post("/cv/", data = {"experience_input_start_year": "2018", "experience_input_end_year": "2022", "experience_input_company": "Company", "experience_input_role": "Job Role", "experience_input_text": "Details"})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_displays_multiple_experience_items(self):
+		Experience.objects.create(start_year = 2018, end_year = 2022, company = "Company 1", role = "Job 1", text = "Details 1")
+		Experience.objects.create(start_year = 2015, end_year = 2016, company = "Company 2", role = "Job 2", text = "Details 2")
+		
+		response = self.client.get("/cv/")
+		
+		self.assertIn("2018-2022: Company 1, Job 1", response.content.decode())
+		self.assertIn("2015-2016: Company 2, Job 2", response.content.decode())
 	
 
 class ModelsTest(TestCase):

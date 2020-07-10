@@ -34,15 +34,26 @@
 				{% csrf_token %}
 			</form>
 		</div>
-		<h2>Work Experience</h2>
-		<form id = "id_experience_form">
-			<input id = "id_experience_input_start_year" placeholder = "Enter employment start year"/>
-			<input id = "id_experience_input_end_year" placeholder = "Enter employment end year"/>
-			<input id = "id_experience_input_company" placeholder = "Enter name of employer"/>
-			<input id = "id_experience_input_role" placeholder = "Enter job title"/>
-			<input id = "id_experience_input_text" placeholder = "Enter further detials about the job"/>
-			<button>Save</button>
-		</form>
+		<div id = "id_experience">
+			<h2>Work Experience</h2>
+			{% for experience_item in experience_items %}
+				<div id = "id_experience_{{ forloop.counter }}">
+					<h3>
+						{% if experience_item.start_year == experience_item.end_year %}{{ experience_item.start_year }}{% else %}{{ experience_item.start_year }}-{{ experience_item.end_year }}{% endif %}: {{ experience_item.company }}, {{ experience_item.role }}
+					</h3>
+					<p>{{ experience_item.text }}</p>
+				</div>
+			{% endfor %}
+			<form id = "id_experience_form" method = "POST">
+				<input id = "id_experience_input_start_year" name = "experience_input_start_year" placeholder = "Enter employment start year"/>
+				<input id = "id_experience_input_end_year" name = "experience_input_end_year" placeholder = "Enter employment end year"/>
+				<input id = "id_experience_input_company" name = "experience_input_company" placeholder = "Enter name of employer"/>
+				<input id = "id_experience_input_role" name = "experience_input_role" placeholder = "Enter job title"/>
+				<input id = "id_experience_input_text" name = "experience_input_text" placeholder = "Enter further detials about the job"/>
+				<button>Save</button>
+				{% csrf_token %}
+			</form>
+		</div>
 		<h2>Voluntary Experience</h2>
 		<form id = "id_volunteering_form">
 			<input id = "id_volunteering_input_start_year" placeholder = "Enter placemenet start year"/>

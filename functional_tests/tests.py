@@ -61,6 +61,15 @@ class CVTest(LiveServerTestCase):
 			education_text = education_item.find_element_by_tag_name("p").text
 			self.assertEqual(education_text, items[i]["text"])
 	
+	def check_for_experience_items_in_order(self, items):
+		experience_section = self.browser.find_element_by_id("id_experience")
+		for i in range(len(items)):
+			experience_item = experience_section.find_element_by_id("id_experience_" + str(i+1))
+			experience_header = experience_item.find_element_by_tag_name("h3").text
+			self.assertEqual(experience_header, items[i]["header"])
+			experience_text = experience_item.find_element_by_tag_name("p").text
+			self.assertEqual(experience_text, items[i]["text"])
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -179,17 +188,62 @@ class CVTest(LiveServerTestCase):
 		#User enters new Work Experience item (2015, 2016, Company 1, Intern, Description of job role.) and presses "Save" button.
 		#Page should refresh and now list "2015-2016: Company 1, Intern" in Work Experience section, along with all previous content.
 		#Page should also read "Description of job role." below this.
-		self.fail("Finish writing tests!")
+		experience_form = self.browser.find_element_by_id("id_experience_form")
+		experience_input_start_year_box = experience_form.find_element_by_id("id_experience_input_start_year")
+		experience_input_start_year_box.send_keys("2015")
+		experience_input_end_year_box = experience_form.find_element_by_id("id_experience_input_end_year")
+		experience_input_end_year_box.send_keys("2016")
+		experience_input_company_box = experience_form.find_element_by_id("id_experience_input_company")
+		experience_input_company_box.send_keys("Company 1")
+		experience_input_role_box = experience_form.find_element_by_id("id_experience_input_role")
+		experience_input_role_box.send_keys("Intern")
+		experience_input_text_box = experience_form.find_element_by_id("id_experience_input_text")
+		experience_input_text_box.send_keys("Description of job role.")
+		experience_save_button = experience_form.find_element_by_tag_name("button")
+		experience_save_button.click()
+		time.sleep(1)
+		
+		experience_item_1 = {"header": "2015-2016: Company 1, Intern", "text": "Description of job role."}
+		self.check_for_experience_items_in_order([experience_item_1])
+		
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Work Experience item (2018, 2018, Company 2, Intern, Description of job role.) and presses "Save" button.
 		#Page should refresh and now list "2018: Company 2, Intern" in Work Experience section, along with all previous content.
 		#Page should also read "Description of job role." below this.
+		experience_form = self.browser.find_element_by_id("id_experience_form")
+		experience_input_start_year_box = experience_form.find_element_by_id("id_experience_input_start_year")
+		experience_input_start_year_box.send_keys("2018")
+		experience_input_end_year_box = experience_form.find_element_by_id("id_experience_input_end_year")
+		experience_input_end_year_box.send_keys("2018")
+		experience_input_company_box = experience_form.find_element_by_id("id_experience_input_company")
+		experience_input_company_box.send_keys("Company 2")
+		experience_input_role_box = experience_form.find_element_by_id("id_experience_input_role")
+		experience_input_role_box.send_keys("Intern")
+		experience_input_text_box = experience_form.find_element_by_id("id_experience_input_text")
+		experience_input_text_box.send_keys("Description of job role.")
+		experience_save_button = experience_form.find_element_by_tag_name("button")
+		experience_save_button.click()
+		time.sleep(1)
 		
+		experience_item_2 = {"header": "2018: Company 2, Intern", "text": "Description of job role."}
 		#Due to start year, "Company 2" should appear above "Company 1".
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Voluntary Experience item (2011, 2012, Company 3, Volunteer, Description of role.) and presses "Save" button.
 		#Page should refresh and now list "2011-2012: Company 3, Volunteer" in Voluntary Experience section, along with all previous content.
 		#Page should also read "Description of role." below this.
+		self.fail("Finish writing tests!")
 		
 		#User enters new Voluntary Experience item (2017, 2017, Company 4, Volunteer, Description of role.) and presses "Save" button.
 		#Page should refresh and now list "2017: Company 4, Volunteer" in Voluntary Experience section, along with all previous content.

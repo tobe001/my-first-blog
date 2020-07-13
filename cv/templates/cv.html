@@ -74,7 +74,7 @@
 				{% endfor %}
 			</ul>
 			<form id = "id_projects_form" method = "POST">
-				<input id = "id_projects_input_text" name = "projects_input_text" placeholder = "Enter details of a new project or achievement"/>
+				{{ project_form.as_p }}
 				<button>Save</button>
 				{% csrf_token %}
 			</form>

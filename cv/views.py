@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from cv.models import KeySkill, Education, Experience, Volunteering, Project
-from .forms import KeySkillForm, EducationForm, ExperienceForm, VolunteeringForm
+from .forms import KeySkillForm, EducationForm, ExperienceForm, VolunteeringForm, ProjectForm
 
 # Create your views here.
 
@@ -10,6 +10,7 @@ def cv(request):
 		new_education_form = EducationForm(request.POST)
 		new_experience_form = ExperienceForm(request.POST)
 		new_volunteering_form = VolunteeringForm(request.POST)
+		new_project_form = ProjectForm(request.POST)
 		if new_skill_form.is_valid():
 			new_skill = KeySkill()
 			new_skill.text = request.POST["skills_input_text"]
@@ -42,7 +43,7 @@ def cv(request):
 			new_volunteering_item.text = request.POST["volunteering_input_text"]
 			new_volunteering_item.save()
 			return redirect("/cv/")
-		else:
+		elif new_project_form.is_valid():
 			new_project = Project()
 			new_project.text = request.POST["projects_input_text"]
 			new_project.save()
@@ -57,8 +58,9 @@ def cv(request):
 	volunteering_items = Volunteering.objects.all().order_by("-start_year")
 	volunteering_form = VolunteeringForm()
 	project_items = Project.objects.all()
+	project_form = ProjectForm()
 	return render(request, "cv.html", {"skills": skills, "skills_form": skills_form,
 										"education_items": education_items, "education_form": education_form,
 										"experience_items": experience_items, "experience_form": experience_form,
 										"volunteering_items": volunteering_items, "volunteering_form": volunteering_form,
-										"project_items": project_items})
+										"project_items": project_items, "project_form": project_form})

@@ -23,3 +23,6 @@ class VolunteeringForm(forms.Form):
 	volunteering_input_company = forms.CharField(max_length = 100, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter company/organisation name"}))
 	volunteering_input_role = forms.CharField(max_length = 100, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter role title"}))
 	volunteering_input_text = forms.CharField(label = "", widget = forms.Textarea(attrs = {"placeholder": "Enter further details"}))
+
+class ProjectForm(forms.Form):
+	projects_input_text = forms.CharField(label = "", widget = forms.Textarea(attrs = {"placeholder": "Enter details of a new project or achievement"}))

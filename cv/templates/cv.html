@@ -66,11 +66,19 @@
 				{% csrf_token %}
 			</form>
 		</div>
-		<h2>Additional Projects and Achievements</h2>
-		<form id = "id_projects_form">
-			<input id = "id_projects_input_text" placeholder = "Enter details of a new project or achievement"/>
-			<button>Save</button>
-		</form>
+		<div id = "id_projects">
+			<h2>Additional Projects and Achievements</h2>
+			<ul>
+				{% for project_item in project_items %}
+					<li>{{ project_item.text }}</li>
+				{% endfor %}
+			</ul>
+			<form id = "id_projects_form" method = "POST">
+				<input id = "id_projects_input_text" name = "projects_input_text" placeholder = "Enter details of a new project or achievement"/>
+				<button>Save</button>
+				{% csrf_token %}
+			</form>
+		</div>
 		<h2>Additional Activities, Skills and Hobbies</h2>
 		<form id = "id_hobbies_form">
 			<input id = "id_hobbies_input_text" placeholder = "Enter a new activity, skill or hobby"/>

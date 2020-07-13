@@ -79,6 +79,12 @@ class CVTest(LiveServerTestCase):
 			volunteering_text = volunteering_item.find_element_by_tag_name("p").text
 			self.assertEqual(volunteering_text, items[i]["text"])
 	
+	def check_for_projects(self, projects):
+		projects_section = self.browser.find_element_by_id("id_projects")
+		project_items = projects_section.find_elements_by_tag_name("li")
+		for project in projects:
+			self.assertIn(project, [item.text for item in project_items])
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -308,13 +314,45 @@ class CVTest(LiveServerTestCase):
 		
 		#User enters new Additional Projects and Achievements item, "I did a thing." and presses "Save" button.
 		#Page should refresh and now list "I did a thing." in Additional Projects and Achievements section, along with all previous content.
-		self.fail("Finish writing tests!")
+		projects_form = self.browser.find_element_by_id("id_projects_form")
+		projects_input_text_box = projects_form.find_element_by_id("id_projects_input_text")
+		projects_input_text_box.send_keys("I did a thing.")
+		projects_save_button = projects_form.find_element_by_tag_name("button")
+		projects_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_projects(["I did a thing."])
+		
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Additional Projects and Achievements item, "I also did another thing." and presses "Save" button.
 		#Page should refresh and now list "I also did another thing." in Additional Projects and Achievements section, along with all previous content.
+		projects_form = self.browser.find_element_by_id("id_projects_form")
+		projects_input_text_box = projects_form.find_element_by_id("id_projects_input_text")
+		projects_input_text_box.send_keys("I also did another thing.")
+		projects_save_button = projects_form.find_element_by_tag_name("button")
+		projects_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Additional Activites, Skills and Hobbies item, "I can do stuff." and presses "Save" button.
 		#Page should refresh and now list "I can do stuff." in Additional Activites, Skills and Hobbies section, along with all previous content.
+		self.fail("Finish writing tests!")
 		
 		#User enters new Additional Activities, Skills and Hobbies item, "I can also do things." and presses "Save" button.
 		#Page should refresh and now list "I can also do things." in Additional Activities, Skills and Hobbies section, along with all previous content.

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education, Experience, Volunteering
+from cv.models import KeySkill, Education, Experience, Volunteering, Project
 
 # Create your tests here.
 
@@ -112,6 +112,28 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("2018-2019: Company 1, Volunteer 1", response.content.decode())
 		self.assertIn("2015-2016: Company 2, Volunteer 2", response.content.decode())
+	
+	def test_saves_project_POST_request(self):
+		self.client.post("/cv/", data = {"projects_input_text": "Project or achievement."})
+		
+		self.assertEqual(Project.objects.count(), 1)
+		new_project = Project.objects.first()
+		self.assertEqual(new_project.text, "Project or achievement.")
+	
+	def test_redirects_after_project_POST_request(self):
+		response = self.client.post("/cv/", data = {"projects_input_text": "Project or achievement."})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_displays_multiple_projects(self):
+		Project.objects.create(text = "Project 1")
+		Project.objects.create(text = "Project 2")
+		
+		response = self.client.get("/cv/")
+		
+		self.assertIn("Project 1", response.content.decode())
+		self.assertIn("Project 2", response.content.decode())
 	
 
 class ModelsTest(TestCase):

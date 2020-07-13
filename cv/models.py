@@ -25,3 +25,6 @@ class Volunteering(models.Model):
 	company = models.CharField(max_length = 100, default = "")
 	role = models.CharField(max_length = 100, default = "")
 	text = models.TextField(default = "")
+
+class Project(models.Model):
+	text = models.TextField(default = "")

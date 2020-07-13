@@ -61,11 +61,7 @@
 				</div>
 			{% endfor %}
 			<form id = "id_volunteering_form" method = "POST">
-				<input id = "id_volunteering_input_start_year" name = "volunteering_input_start_year" placeholder = "Enter placemenet start year"/>
-				<input id = "id_volunteering_input_end_year" name = "volunteering_input_end_year" placeholder = "Enter placement end year"/>
-				<input id = "id_volunteering_input_company" name = "volunteering_input_company" placeholder = "Enter name of company/organisation"/>
-				<input id = "id_volunteering_input_role" name = "volunteering_input_role" placeholder = "Enter name of role"/>
-				<input id = "id_volunteering_input_text" name = "volunteering_input_text" placeholder = "Enter further details about the placement"/>
+				{{ volunteering_form.as_p }}
 				<button>Save</button>
 				{% csrf_token %}
 			</form>

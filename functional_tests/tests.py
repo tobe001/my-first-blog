@@ -70,6 +70,15 @@ class CVTest(LiveServerTestCase):
 			experience_text = experience_item.find_element_by_tag_name("p").text
 			self.assertEqual(experience_text, items[i]["text"])
 	
+	def check_for_volunteering_items_in_order(self, items):
+		volunteering_section = self.browser.find_element_by_id("id_volunteering")
+		for i in range(len(items)):
+			volunteering_item = volunteering_section.find_element_by_id("id_volunteering_" + str(i+1))
+			volunteering_header = volunteering_item.find_element_by_tag_name("h3").text
+			self.assertEqual(volunteering_header, items[i]["header"])
+			volunteering_text = volunteering_item.find_element_by_tag_name("p").text
+			self.assertEqual(volunteering_text, items[i]["text"])
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -243,16 +252,63 @@ class CVTest(LiveServerTestCase):
 		#User enters new Voluntary Experience item (2011, 2012, Company 3, Volunteer, Description of role.) and presses "Save" button.
 		#Page should refresh and now list "2011-2012: Company 3, Volunteer" in Voluntary Experience section, along with all previous content.
 		#Page should also read "Description of role." below this.
-		self.fail("Finish writing tests!")
+		volunteering_form = self.browser.find_element_by_id("id_volunteering_form")
+		volunteering_input_start_year_box = volunteering_form.find_element_by_id("id_volunteering_input_start_year")
+		volunteering_input_start_year_box.send_keys("2011")
+		volunteering_input_end_year_box = volunteering_form.find_element_by_id("id_volunteering_input_end_year")
+		volunteering_input_end_year_box.send_keys("2012")
+		volunteering_input_company_box = volunteering_form.find_element_by_id("id_volunteering_input_company")
+		volunteering_input_company_box.send_keys("Company 3")
+		volunteering_input_role_box = volunteering_form.find_element_by_id("id_volunteering_input_role")
+		volunteering_input_role_box.send_keys("Volunteer")
+		volunteering_input_text_box = volunteering_form.find_element_by_id("id_volunteering_input_text")
+		volunteering_input_text_box.send_keys("Description of role.")
+		volunteering_save_button = volunteering_form.find_element_by_tag_name("button")
+		volunteering_save_button.click()
+		time.sleep(1)
+		
+		volunteering_item_1 = {"header": "2011-2012: Company 3, Volunteer", "text": "Description of role."}
+		self.check_for_volunteering_items_in_order([volunteering_item_1])
+		
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Voluntary Experience item (2017, 2017, Company 4, Volunteer, Description of role.) and presses "Save" button.
 		#Page should refresh and now list "2017: Company 4, Volunteer" in Voluntary Experience section, along with all previous content.
 		#Page should also read "Description of role." below this.
+		volunteering_form = self.browser.find_element_by_id("id_volunteering_form")
+		volunteering_input_start_year_box = volunteering_form.find_element_by_id("id_volunteering_input_start_year")
+		volunteering_input_start_year_box.send_keys("2017")
+		volunteering_input_end_year_box = volunteering_form.find_element_by_id("id_volunteering_input_end_year")
+		volunteering_input_end_year_box.send_keys("2017")
+		volunteering_input_company_box = volunteering_form.find_element_by_id("id_volunteering_input_company")
+		volunteering_input_company_box.send_keys("Company 4")
+		volunteering_input_role_box = volunteering_form.find_element_by_id("id_volunteering_input_role")
+		volunteering_input_role_box.send_keys("Volunteer")
+		volunteering_input_text_box = volunteering_form.find_element_by_id("id_volunteering_input_text")
+		volunteering_input_text_box.send_keys("Description of role.")
+		volunteering_save_button = volunteering_form.find_element_by_tag_name("button")
+		volunteering_save_button.click()
+		time.sleep(1)
 		
+		volunteering_item_2 = {"header": "2017: Company 4, Volunteer", "text": "Description of role."}
 		#Due to start year, "Company 4" should appear above "Company 3".
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Additional Projects and Achievements item, "I did a thing." and presses "Save" button.
 		#Page should refresh and now list "I did a thing." in Additional Projects and Achievements section, along with all previous content.
+		self.fail("Finish writing tests!")
 		
 		#User enters new Additional Projects and Achievements item, "I also did another thing." and presses "Save" button.
 		#Page should refresh and now list "I also did another thing." in Additional Projects and Achievements section, along with all previous content.

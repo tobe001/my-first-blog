@@ -50,15 +50,26 @@
 				{% csrf_token %}
 			</form>
 		</div>
-		<h2>Voluntary Experience</h2>
-		<form id = "id_volunteering_form">
-			<input id = "id_volunteering_input_start_year" placeholder = "Enter placemenet start year"/>
-			<input id = "id_volunteering_input_end_year" placeholder = "Enter placement end year"/>
-			<input id = "id_volunteering_input_company" placeholder = "Enter name of company/organisation"/>
-			<input id = "id_volunteering_input_role" placeholder = "Enter name of role"/>
-			<input id = "id_volunteering_input_text" placeholder = "Enter further details about the placement"/>
-			<button>Save</button>
-		</form>
+		<div id = "id_volunteering">
+			<h2>Voluntary Experience</h2>
+			{% for volunteering_item in volunteering_items %}
+				<div id = "id_volunteering_{{ forloop.counter }}">
+					<h3>
+						{% if volunteering_item.start_year == volunteering_item.end_year %}{{volunteering_item.start_year }}{% else %}{{ volunteering_item.start_year }}-{{ volunteering_item.end_year }}{% endif %}: {{ volunteering_item.company }}, {{ volunteering_item.role }}
+					</h3>
+					<p>{{ volunteering_item.text }}</p>
+				</div>
+			{% endfor %}
+			<form id = "id_volunteering_form" method = "POST">
+				<input id = "id_volunteering_input_start_year" name = "volunteering_input_start_year" placeholder = "Enter placemenet start year"/>
+				<input id = "id_volunteering_input_end_year" name = "volunteering_input_end_year" placeholder = "Enter placement end year"/>
+				<input id = "id_volunteering_input_company" name = "volunteering_input_company" placeholder = "Enter name of company/organisation"/>
+				<input id = "id_volunteering_input_role" name = "volunteering_input_role" placeholder = "Enter name of role"/>
+				<input id = "id_volunteering_input_text" name = "volunteering_input_text" placeholder = "Enter further details about the placement"/>
+				<button>Save</button>
+				{% csrf_token %}
+			</form>
+		</div>
 		<h2>Additional Projects and Achievements</h2>
 		<form id = "id_projects_form">
 			<input id = "id_projects_input_text" placeholder = "Enter details of a new project or achievement"/>

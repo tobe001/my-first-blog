@@ -18,3 +18,10 @@ class Experience(models.Model):
 	company = models.CharField(max_length = 100, default = "")
 	role = models.CharField(max_length = 100, default = "")
 	text = models.TextField(default = "")
+
+class Volunteering(models.Model):
+	start_year = models.IntegerField(default = 0)
+	end_year = models.IntegerField(default = 9999)
+	company = models.CharField(max_length = 100, default = "")
+	role = models.CharField(max_length = 100, default = "")
+	text = models.TextField(default = "")

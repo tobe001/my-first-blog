@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education, Experience
+from cv.models import KeySkill, Education, Experience, Volunteering
 
 # Create your tests here.
 
@@ -86,6 +86,32 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("2018-2022: Company 1, Job 1", response.content.decode())
 		self.assertIn("2015-2016: Company 2, Job 2", response.content.decode())
+	
+	def test_saves_volunteering_POST_request(self):
+		self.client.post("/cv/", data = {"volunteering_input_start_year": "2018", "volunteering_input_end_year": "2019", "volunteering_input_company": "Company", "volunteering_input_role": "Volunteer", "volunteering_input_text": "Details"})
+		
+		self.assertEqual(Volunteering.objects.count(), 1)
+		new_volunteering_item = Volunteering.objects.first()
+		self.assertEqual(new_volunteering_item.start_year, 2018)
+		self.assertEqual(new_volunteering_item.end_year, 2019)
+		self.assertEqual(new_volunteering_item.company, "Company")
+		self.assertEqual(new_volunteering_item.role, "Volunteer")
+		self.assertEqual(new_volunteering_item.text, "Details")
+	
+	def test_redirects_after_volunteering_POST_request(self):
+		response = self.client.post("/cv/", data = {"volunteering_input_start_year": "2018", "volunteering_input_end_year": "2019", "volunteering_input_company": "Company", "volunteering_input_role": "Volunteer", "volunteering_input_text": "Details"})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_displays_multiple_volunteering_items(self):
+		Volunteering.objects.create(start_year = 2018, end_year = 2019, company = "Company 1", role = "Volunteer 1", text = "Details 1")
+		Volunteering.objects.create(start_year = 2015, end_year = 2016, company = "Company 2", role = "Volunteer 2", text = "Details 2")
+		
+		response = self.client.get("/cv/")
+		
+		self.assertIn("2018-2019: Company 1, Volunteer 1", response.content.decode())
+		self.assertIn("2015-2016: Company 2, Volunteer 2", response.content.decode())
 	
 
 class ModelsTest(TestCase):

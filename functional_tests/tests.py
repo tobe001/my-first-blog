@@ -84,6 +84,12 @@ class CVTest(LiveServerTestCase):
 		project_items = projects_section.find_elements_by_tag_name("li")
 		for project in projects:
 			self.assertIn(project, [item.text for item in project_items])
+		
+	def check_for_hobbies(self, hobbies):
+		hobbies_section = self.browser.find_element_by_id("id_hobbies")
+		hobby_items = hobbies_section.find_elements_by_tag_name("li")
+		for hobby in hobbies:
+			self.assertIn(hobby, [item.text for item in hobby_items])
 	
 	def test_fill_cv_and_retrieve(self):
 		
@@ -352,14 +358,48 @@ class CVTest(LiveServerTestCase):
 		
 		#User enters new Additional Activites, Skills and Hobbies item, "I can do stuff." and presses "Save" button.
 		#Page should refresh and now list "I can do stuff." in Additional Activites, Skills and Hobbies section, along with all previous content.
-		self.fail("Finish writing tests!")
+		hobbies_form = self.browser.find_element_by_id("id_hobbies_form")
+		hobbies_input_text_box = hobbies_form.find_element_by_id("id_hobbies_input_text")
+		hobbies_input_text_box.send_keys("I can do stuff.")
+		hobbies_save_button = hobbies_form.find_element_by_tag_name("button")
+		hobbies_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_hobbies(["I can do stuff."])
+		
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new Additional Activities, Skills and Hobbies item, "I can also do things." and presses "Save" button.
 		#Page should refresh and now list "I can also do things." in Additional Activities, Skills and Hobbies section, along with all previous content.
+		hobbies_form = self.browser.find_element_by_id("id_hobbies_form")
+		hobbies_input_text_box = hobbies_form.find_element_by_id("id_hobbies_input_text")
+		hobbies_input_text_box.send_keys("I can also do things.")
+		hobbies_save_button = hobbies_form.find_element_by_tag_name("button")
+		hobbies_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		self.check_placeholder_reference_text()
 		
 		#User enters new References item (Person 1, Academic Tutor, 00000 000000, person@email,com) and presses "Save" button.
 		#Page should refresh and now list "Person 1, Academic Tutor. Phone: 00000 000000, Email: person@email.com" in References section,
 		#along with all previous content except for "References are available on request.", which should no longer be displayed.
+		self.fail("Finish writing tests!")
 		
 		#User enters new References item (Person 2, Work Experience Supervisor, (NO PHONE), (NO EMAIL)) and presses "Save" button.
 		#Page should refresh and now list "Person 2, Work Experience Supervisor." in References section, along with all previous content.

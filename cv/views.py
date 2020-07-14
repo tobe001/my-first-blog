@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from cv.models import KeySkill, Education, Experience, Volunteering, Project
+from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby
 from .forms import KeySkillForm, EducationForm, ExperienceForm, VolunteeringForm, ProjectForm
 
 # Create your views here.
@@ -48,6 +48,11 @@ def cv(request):
 			new_project.text = request.POST["projects_input_text"]
 			new_project.save()
 			return redirect("/cv/")
+		else:
+			new_hobby = Hobby()
+			new_hobby.text = request.POST["hobbies_input_text"]
+			new_hobby.save()
+			return redirect("/cv/")
 	
 	skills = KeySkill.objects.all()
 	skills_form = KeySkillForm()
@@ -59,8 +64,10 @@ def cv(request):
 	volunteering_form = VolunteeringForm()
 	project_items = Project.objects.all()
 	project_form = ProjectForm()
+	hobby_items = Hobby.objects.all()
 	return render(request, "cv.html", {"skills": skills, "skills_form": skills_form,
 										"education_items": education_items, "education_form": education_form,
 										"experience_items": experience_items, "experience_form": experience_form,
 										"volunteering_items": volunteering_items, "volunteering_form": volunteering_form,
-										"project_items": project_items, "project_form": project_form})
+										"project_items": project_items, "project_form": project_form,
+										"hobby_items": hobby_items})

@@ -28,3 +28,6 @@ class Volunteering(models.Model):
 
 class Project(models.Model):
 	text = models.TextField(default = "")
+
+class Hobby(models.Model):
+	text = models.TextField(default = "")

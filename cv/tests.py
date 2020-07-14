@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education, Experience, Volunteering, Project
+from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby
 
 # Create your tests here.
 
@@ -134,6 +134,28 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("Project 1", response.content.decode())
 		self.assertIn("Project 2", response.content.decode())
+	
+	def test_saves_hobby_POST_request(self):
+		self.client.post("/cv/", data = {"hobbies_input_text": "Activity, skill or hobby."})
+		
+		self.assertEqual(Hobby.objects.count(), 1)
+		new_hobby = Hobby.objects.first()
+		self.assertEqual(new_hobby.text, "Activity, skill or hobby.")
+	
+	def test_redirects_after_hobby_POST_request(self):
+		response = self.client.post("/cv/", data = {"hobbies_input_text": "Activity, skill or hobby."})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_displays_multiple_hobbies(self):
+		Hobby.objects.create(text = "Hobby 1")
+		Hobby.objects.create(text = "Hobby 2")
+		
+		response = self.client.get("/cv/")
+		
+		self.assertIn("Hobby 1", response.content.decode())
+		self.assertIn("Hobby 2", response.content.decode())
 	
 
 class ModelsTest(TestCase):

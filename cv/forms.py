@@ -26,3 +26,6 @@ class VolunteeringForm(forms.Form):
 
 class ProjectForm(forms.Form):
 	projects_input_text = forms.CharField(label = "", widget = forms.Textarea(attrs = {"placeholder": "Enter details of a new project or achievement"}))
+
+class HobbyForm(forms.Form):
+	hobbies_input_text = forms.CharField(label = "", widget = forms.Textarea(attrs = {"placeholder": "Enter details of a new activity, skill or hobby"}))

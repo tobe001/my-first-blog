@@ -87,7 +87,7 @@
 				{% endfor %}
 			</ul>
 			<form id = "id_hobbies_form" method = "POST">
-				<input id = "id_hobbies_input_text" name = "hobbies_input_text" placeholder = "Enter a new activity, skill or hobby"/>
+				{{ hobby_form.as_p }}
 				<button>Save</button>
 				{% csrf_token %}
 			</form>

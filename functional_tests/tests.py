@@ -44,7 +44,8 @@ class CVTest(LiveServerTestCase):
 	
 	def check_placeholder_reference_text(self):
 		references_section = self.browser.find_element_by_id("id_references")
-		self.assertEqual(references_section.find_element_by_tag_name("p").text, "References available on request.")
+		references_paras = references_section.find_elements_by_tag_name("p")
+		self.assertIn("References available on request.", [para.text for para in references_paras])
 	
 	def check_for_key_skills(self, skills):
 		skills_section = self.browser.find_element_by_id("id_skills")
@@ -90,6 +91,12 @@ class CVTest(LiveServerTestCase):
 		hobby_items = hobbies_section.find_elements_by_tag_name("li")
 		for hobby in hobbies:
 			self.assertIn(hobby, [item.text for item in hobby_items])
+	
+	def check_for_references(self, references):
+		references_section = self.browser.find_element_by_id("id_references")
+		reference_items = references_section.find_elements_by_tag_name("p")
+		for reference in references:
+			self.assertIn(reference, [item.text for item in reference_items])
 	
 	def test_fill_cv_and_retrieve(self):
 		
@@ -397,15 +404,59 @@ class CVTest(LiveServerTestCase):
 		self.check_placeholder_reference_text()
 		
 		#User enters new References item (Person 1, Academic Tutor, 00000 000000, person@email,com) and presses "Save" button.
-		#Page should refresh and now list "Person 1, Academic Tutor. Phone: 00000 000000, Email: person@email.com" in References section,
+		#Page should refresh and now list "Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com." in References section,
 		#along with all previous content except for "References are available on request.", which should no longer be displayed.
-		self.fail("Finish writing tests!")
+		references_form = self.browser.find_element_by_id("id_references_form")
+		references_input_name_box = references_form.find_element_by_id("id_references_input_name")
+		references_input_name_box.send_keys("Person 1")
+		references_input_relevance_box = references_form.find_element_by_id("id_references_input_relevance")
+		references_input_relevance_box.send_keys("Academic Tutor")
+		references_input_phone_box = references_form.find_element_by_id("id_references_input_phone")
+		references_input_phone_box.send_keys("00000 000000")
+		references_input_email_box = references_form.find_element_by_id("id_references_input_email")
+		references_input_email_box.send_keys("person@email.com")
+		references_save_button = references_form.find_element_by_tag_name("button")
+		references_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com."])
+		
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		
+		references_section = self.browser.find_element_by_id("id_references")
+		self.assertFalse("References available on request." in references_section.text)
 		
 		#User enters new References item (Person 2, Work Experience Supervisor, (NO PHONE), (NO EMAIL)) and presses "Save" button.
 		#Page should refresh and now list "Person 2, Work Experience Supervisor." in References section, along with all previous content.
+		references_form = self.browser.find_element_by_id("id_references_form")
+		references_input_name_box = references_form.find_element_by_id("id_references_input_name")
+		references_input_name_box.send_keys("Person 2")
+		references_input_relevance_box = references_form.find_element_by_id("id_references_input_relevance")
+		references_input_relevance_box.send_keys("Work Experience Supervisor")
+		references_save_button = references_form.find_element_by_tag_name("button")
+		references_save_button.click()
+		time.sleep(1)
+		
+		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
 		
 		#User navigates to CV page again.
 		#All previous content should still be there.
+		self.fail("Finish writing tests!")
 		
 		#User exits browser, concluding test.
 	

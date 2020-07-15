@@ -31,3 +31,9 @@ class Project(models.Model):
 
 class Hobby(models.Model):
 	text = models.TextField(default = "")
+
+class Reference(models.Model):
+	name = models.CharField(max_length = 100, default = "")
+	relevance = models.CharField(max_length = 100, default = "")
+	phone = models.CharField(max_length = 12, default = "")
+	email = models.CharField(max_length = 100, default = "")

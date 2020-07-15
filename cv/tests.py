@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby
+from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference
 
 # Create your tests here.
 
@@ -156,6 +156,31 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("Hobby 1", response.content.decode())
 		self.assertIn("Hobby 2", response.content.decode())
+	
+	def test_saves_reference_POST_request(self):
+		self.client.post("/cv/", data = {"references_input_name": "Mr. Person", "references_input_relevance": "Person I know", "references_input_phone": "00000 000000", "references_input_email": "person@email.com"})
+		
+		self.assertEqual(Reference.objects.count(), 1)
+		new_reference = Reference.objects.first()
+		self.assertEqual(new_reference.name, "Mr. Person")
+		self.assertEqual(new_reference.relevance, "Person I know")
+		self.assertEqual(new_reference.phone, "00000 000000")
+		self.assertEqual(new_reference.email, "person@email.com")
+	
+	def test_redirects_after_reference_POST_request(self):
+		response = self.client.post("/cv/", data = {"references_input_name": "Mr. Person", "references_input_relevance": "Person I know", "references_input_phone": "00000 000000", "references_input_email": "person@email.com"})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_displays_multiple_references(self):
+		Reference.objects.create(name = "Person 1", relevance = "Person I know", phone = "00000 000000", email = "person1@email.com")
+		Reference.objects.create(name = "Person 2", relevance = "Random person")
+		
+		response = self.client.get("/cv/")
+		
+		self.assertIn("Person 1, Person I know.", response.content.decode())
+		self.assertIn("Person 2, Random person.", response.content.decode())
 	
 
 class ModelsTest(TestCase):

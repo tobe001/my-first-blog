@@ -94,13 +94,28 @@
 		</div>
 		<div id = "id_references">
 			<h2>References</h2>
-			<p>References available on request.</p>
-			<form id = "id_references_form">
-				<input id = "id_references_input_name" placeholder = "Enter name of reference"/>
-				<input id = "id_references_input_relevance" placeholder = "Enter relation of reference to you"/>
-				<input id = "id_references_input_phone" placeholder = "Enter reference's phone number"/>
-				<input id = "id_references_input_email" placeholder = "Enter reference's email address"/>
+			{% if reference_items.count == 0 %}
+				<p>References available on request.</p>
+			{% else %}
+				{% for reference_item in reference_items %}
+					<p>
+						<b>{{ reference_item.name }}, {{ reference_item.relevance }}.</b>
+						{% if reference_item.phone %}
+							Phone: {{ reference_item.phone }}.
+						{% endif %}
+						{% if reference_item.email %}
+							Email: {{ reference_item.email }}.
+						{% endif %}
+					</p>
+				{% endfor %}
+			{% endif %}
+			<form id = "id_references_form" method = "POST">
+				<input id = "id_references_input_name" name = "references_input_name" placeholder = "Enter name of reference"/>
+				<input id = "id_references_input_relevance" name = "references_input_relevance" placeholder = "Enter relation of reference to you"/>
+				<input id = "id_references_input_phone" name = "references_input_phone" placeholder = "Enter reference's phone number"/>
+				<input id = "id_references_input_email" name = "references_input_email" placeholder = "Enter reference's email address"/>
 				<button>Save</button>
+				{% csrf_token %}
 			</form>
 		</div>
 	</body>

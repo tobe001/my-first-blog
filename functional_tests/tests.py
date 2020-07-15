@@ -445,6 +445,7 @@ class CVTest(LiveServerTestCase):
 		time.sleep(1)
 		
 		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
+		
 		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
 		self.check_for_projects(["I did a thing.", "I also did another thing."])
 		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
@@ -456,7 +457,18 @@ class CVTest(LiveServerTestCase):
 		
 		#User navigates to CV page again.
 		#All previous content should still be there.
-		self.fail("Finish writing tests!")
+		self.browser.get(self.live_server_url + "/cv/")
+		self.assertIn("CV", self.browser.title)
+		
+		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
 		
 		#User exits browser, concluding test.
 	

@@ -29,3 +29,9 @@ class ProjectForm(forms.Form):
 
 class HobbyForm(forms.Form):
 	hobbies_input_text = forms.CharField(label = "", widget = forms.Textarea(attrs = {"placeholder": "Enter details of a new activity, skill or hobby"}))
+
+class ReferenceForm(forms.Form):
+	references_input_name = forms.CharField(max_length = 100, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter name of reference"}))
+	references_input_relevance = forms.CharField(max_length = 100, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter reference's relation to you"}))
+	references_input_phone = forms.CharField(max_length = 12, required = False, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter phone number"}))
+	references_input_email = forms.CharField(max_length = 100, required = False, label = "", widget = forms.TextInput(attrs = {"placeholder": "Enter email address"}))

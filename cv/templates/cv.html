@@ -1,13 +1,19 @@
+{% load static %}
+
 <html>
 	<head>
+		<link href = "//fonts.googleapis.com/css?family=Lato" rel = "stylesheet" type = "text/css">
+		<link rel = "stylesheet" href = "{% static 'css/cv.css' %}">
 		<title>My CV</title>
 	</head>
 	<body>
 		<h1>Thomas Beckett</h1>
+		<h3 id = "id_contact_details" >(Contact details omitted for privacy reasons)</h3>
 		<h2>Profile</h2>
+		<p>I am a Mathematics and Computer Science student at the University of Birmingham. A methodical and results-driven individual, I am currently searching for a summer placement or internship where I can put my applied maths and/or programming skills to practical use.</p>
 		<div id = "id_skills">
 			<h2>Key Skills</h2>
-			<ul>
+			<ul id = "id_skills_list">
 				{% for skill in skills %}
 					<li>{{ skill.text }}</li>
 				{% endfor %}
@@ -21,13 +27,14 @@
 		<div id = "id_education">
 			<h2>Education</h2>
 			{% for education_item in education_items %}
-				<div id = "id_education_{{ forloop.counter }}">
+				<div id = "id_education_{{ forloop.counter }}" class = "block_content">
 					<h3>
 						{% if education_item.start_year == education_item.end_year %}{{ education_item.start_year }}{% else %}{{ education_item.start_year }}-{{ education_item.end_year }}{% endif %}: {{ education_item.institution }}{% if education_item.course_title %}, {{ education_item.course_title }}{% endif %}
 					</h3>
-					<p>{{ education_item.text }}</p>
+					<p>{{ education_item.text | linebreaksbr }}</p>
 				</div>
 			{% endfor %}
+			<h4>Add new education details:</h4>
 			<form id = "id_education_form" method = "POST">
 				{{ education_form.as_p }}
 				<button>Save</button>
@@ -37,13 +44,14 @@
 		<div id = "id_experience">
 			<h2>Work Experience</h2>
 			{% for experience_item in experience_items %}
-				<div id = "id_experience_{{ forloop.counter }}">
+				<div id = "id_experience_{{ forloop.counter }}" class = "block_content">
 					<h3>
 						{% if experience_item.start_year == experience_item.end_year %}{{ experience_item.start_year }}{% else %}{{ experience_item.start_year }}-{{ experience_item.end_year }}{% endif %}: {{ experience_item.company }}, {{ experience_item.role }}
 					</h3>
-					<p>{{ experience_item.text }}</p>
+					<p>{{ experience_item.text | linebreaksbr }}</p>
 				</div>
 			{% endfor %}
+			<h4>Add details of new work experience:</h4>
 			<form id = "id_experience_form" method = "POST">
 				{{ experience_form.as_p }}
 				<button>Save</button>
@@ -53,13 +61,14 @@
 		<div id = "id_volunteering">
 			<h2>Voluntary Experience</h2>
 			{% for volunteering_item in volunteering_items %}
-				<div id = "id_volunteering_{{ forloop.counter }}">
+				<div id = "id_volunteering_{{ forloop.counter }}" class = "block_content">
 					<h3>
 						{% if volunteering_item.start_year == volunteering_item.end_year %}{{volunteering_item.start_year }}{% else %}{{ volunteering_item.start_year }}-{{ volunteering_item.end_year }}{% endif %}: {{ volunteering_item.company }}, {{ volunteering_item.role }}
 					</h3>
-					<p>{{ volunteering_item.text }}</p>
+					<p>{{ volunteering_item.text | linebreaksbr }}</p>
 				</div>
 			{% endfor %}
+			<h4>Add details of new voluntary work:</h4>
 			<form id = "id_volunteering_form" method = "POST">
 				{{ volunteering_form.as_p }}
 				<button>Save</button>
@@ -70,7 +79,7 @@
 			<h2>Additional Projects and Achievements</h2>
 			<ul>
 				{% for project_item in project_items %}
-					<li>{{ project_item.text }}</li>
+					<li class = "list_para">{{ project_item.text | linebreaksbr }}</li>
 				{% endfor %}
 			</ul>
 			<form id = "id_projects_form" method = "POST">
@@ -83,7 +92,7 @@
 			<h2>Additional Activities, Skills and Hobbies</h2>
 			<ul>
 				{% for hobby_item in hobby_items %}
-					<li>{{ hobby_item.text }}</li>
+					<li class = "list_para">{{ hobby_item.text | linebreaksbr }}</li>
 				{% endfor %}
 			</ul>
 			<form id = "id_hobbies_form" method = "POST">
@@ -94,21 +103,24 @@
 		</div>
 		<div id = "id_references">
 			<h2>References</h2>
-			{% if reference_items.count == 0 %}
-				<p>References available on request.</p>
-			{% else %}
-				{% for reference_item in reference_items %}
-					<p>
-						<b>{{ reference_item.name }}, {{ reference_item.relevance }}.</b>
-						{% if reference_item.phone %}
-							Phone: {{ reference_item.phone }}.
-						{% endif %}
-						{% if reference_item.email %}
-							Email: {{ reference_item.email }}.
-						{% endif %}
-					</p>
-				{% endfor %}
-			{% endif %}
+			<div id = "id_reference_list">
+				{% if reference_items.count == 0 %}
+					<p>References available on request.</p>
+				{% else %}
+					{% for reference_item in reference_items %}
+						<p>
+							<b>{{ reference_item.name }}, {{ reference_item.relevance }}.</b>
+							{% if reference_item.phone %}
+								Phone: {{ reference_item.phone }}.
+							{% endif %}
+							{% if reference_item.email %}
+								Email: {{ reference_item.email }}.
+							{% endif %}
+						</p>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<h4>Add details of a new reference:</h4>
 			<form id = "id_references_form" method = "POST">
 				{{ reference_form.as_p }}
 				<button>Save</button>

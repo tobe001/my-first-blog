@@ -1,0 +1,25 @@
+body {
+	font-family: Lato, serif;
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
+h1, #id_contact_details {
+	text-align: center;
+}
+
+h2 {
+	text-decoration: underline;
+}
+
+#id_skills_list, #id_reference_list {
+	padding-bottom: 20px;
+}
+
+.block_content {
+	padding-bottom: 20px;
+}
+
+.list_para {
+	padding-bottom: 10px;
+}

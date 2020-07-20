@@ -37,3 +37,6 @@ class Reference(models.Model):
 	relevance = models.CharField(max_length = 100, default = "")
 	phone = models.CharField(max_length = 12, default = "")
 	email = models.CharField(max_length = 100, default = "")
+
+class Profile(models.Model):
+	text = models.TextField(default = "")

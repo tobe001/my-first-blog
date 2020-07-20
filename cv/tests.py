@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference
+from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference, Profile
 
 # Create your tests here.
 
@@ -181,4 +181,23 @@ class CVPageTest(TestCase):
 		
 		self.assertIn("Person 1, Person I know.", response.content.decode())
 		self.assertIn("Person 2, Random person.", response.content.decode())
+	
+	def test_saves_profile_POST_request(self):
+		self.client.post("/cv/", data = {"profile_input_text": "Profile text."})
+		
+		self.assertEqual(Profile.objects.count(), 1)
+		profile = Profile.objects.first()
+		self.assertEqual(profile.text, "Profile text.")
+	
+	def test_redirects_after_profile_POST_request(self):
+		response = self.client.post("/cv/", data = {"profile_input_text": "Profile text."})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response["location"], "/cv/")
+	
+	def test_saves_only_one_profile_object(self):
+		self.client.post("/cv/", data = {"profile_input_text": "Profile text 1."})
+		self.client.post("/cv/", data = {"profile_input_text": "Profile text 2."})
+		
+		self.assertEqual(Profile.objects.count(), 1)
 	

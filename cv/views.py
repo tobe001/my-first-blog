@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference
+from cv.models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference, Profile
 from .forms import KeySkillForm, EducationForm, ExperienceForm, VolunteeringForm, ProjectForm, HobbyForm, ReferenceForm
 
 # Create your views here.
@@ -63,6 +63,16 @@ def cv(request):
 			new_reference.email = request.POST["references_input_email"]
 			new_reference.save()
 			return redirect("/cv/")
+		else:
+			if Profile.objects.count() == 0:
+				profile = Profile()
+				profile.text = request.POST["profile_input_text"]
+				profile.save()
+			else:
+				profile = Profile.objects.first()
+				profile.text = request.POST["profile_input_text"]
+				profile.save()
+			return redirect("/cv/")
 	
 	skills = KeySkill.objects.all()
 	skills_form = KeySkillForm()
@@ -78,10 +88,12 @@ def cv(request):
 	hobby_form = HobbyForm()
 	reference_items = Reference.objects.all()
 	reference_form = ReferenceForm()
+	profile_item = Profile.objects.first()
 	return render(request, "cv.html", {"skills": skills, "skills_form": skills_form,
 										"education_items": education_items, "education_form": education_form,
 										"experience_items": experience_items, "experience_form": experience_form,
 										"volunteering_items": volunteering_items, "volunteering_form": volunteering_form,
 										"project_items": project_items, "project_form": project_form,
 										"hobby_items": hobby_items, "hobby_form": hobby_form,
-										"reference_items": reference_items, "reference_form": reference_form})
+										"reference_items": reference_items, "reference_form": reference_form,
+										"profile_item": profile_item})

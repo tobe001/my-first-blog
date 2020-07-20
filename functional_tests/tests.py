@@ -34,6 +34,7 @@ class CVTest(LiveServerTestCase):
 		self.check_section_header("References")
 	
 	def check_forms(self):
+		self.check_form("id_profile_form", ["id_profile_input_text"])
 		self.check_form("id_skills_form", ["id_skills_input_text"])
 		self.check_form("id_education_form", ["id_education_input_start_year", "id_education_input_end_year", "id_education_input_institution", "id_education_input_course_title", "id_education_input_text"])
 		self.check_form("id_experience_form", ["id_experience_input_start_year", "id_experience_input_end_year", "id_experience_input_company", "id_experience_input_role", "id_experience_input_text"])
@@ -98,6 +99,12 @@ class CVTest(LiveServerTestCase):
 		for reference in references:
 			self.assertIn(reference, [item.text for item in reference_items])
 	
+	def check_profile(self, text):
+		profile_section = self.browser.find_element_by_id("id_profile")
+		profile_paras = profile_section.find_elements_by_tag_name("p")
+		self.assertEqual(len(profile_paras), 1)
+		self.assertEqual(profile_paras[0].text, text)
+	
 	def test_fill_cv_and_retrieve(self):
 		
 		#User navigates to site's CV page.
@@ -121,6 +128,7 @@ class CVTest(LiveServerTestCase):
 		self.check_headers()
 		
 		#Page should contain input boxes for:
+		#Profile (Text)
 		#Key Skills (Text)
 		#Education (Start Year, End Year, Institution, Course Title, Text)
 		#Work Experience (Start Year, End Year, Company, Role, Text)
@@ -455,11 +463,54 @@ class CVTest(LiveServerTestCase):
 		self.check_headers()
 		self.check_forms()
 		
+		#User enters a new Profile, "I am a good employee." and presses "Save" button.
+		#Page should refresh and the profile should now read "I am a good employee.", and all previous content should still be present.
+		profile_form = self.browser.find_element_by_id("id_profile_form")
+		profile_input_text_box = profile_form.find_element_by_id("id_profile_input_text")
+		profile_input_text_box.send_keys("I am a good employee.")
+		profile_save_button = profile_form.find_element_by_tag_name("button")
+		profile_save_button.click()
+		time.sleep(1)
+		
+		self.check_profile("I am a good employee.")
+		
+		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		
+		#User enters a new Profile, "I am an excellent employee." and presses "Save" button.
+		#Page should refresh and the profile should now read "I am an excellent employee.", with the previous profile not displaying, and all other previous content should still be present.
+		profile_form = self.browser.find_element_by_id("id_profile_form")
+		profile_input_text_box = profile_form.find_element_by_id("id_profile_input_text")
+		profile_input_text_box.send_keys("I am an excellent employee.")
+		profile_save_button = profile_form.find_element_by_tag_name("button")
+		profile_save_button.click()
+		time.sleep(1)
+		
+		self.check_profile("I am an excellent employee.")
+		
+		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
+		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
+		self.check_for_projects(["I did a thing.", "I also did another thing."])
+		self.check_for_volunteering_items_in_order([volunteering_item_2, volunteering_item_1])
+		self.check_for_experience_items_in_order([experience_item_2, experience_item_1])
+		self.check_for_education_items_in_order([education_item_2, education_item_1])
+		self.check_for_key_skills(["Programming Skills", "Time Management"])
+		self.check_headers()
+		self.check_forms()
+		
 		#User navigates to CV page again.
 		#All previous content should still be there.
 		self.browser.get(self.live_server_url + "/cv/")
 		self.assertIn("CV", self.browser.title)
 		
+		self.check_profile("I am an excellent employee.")
 		self.check_for_references(["Person 1, Academic Tutor. Phone: 00000 000000. Email: person@email.com.", "Person 2, Work Experience Supervisor."])
 		self.check_for_hobbies(["I can do stuff.", "I can also do things."])
 		self.check_for_projects(["I did a thing.", "I also did another thing."])

@@ -9,8 +9,15 @@
 	<body>
 		<h1>Thomas Beckett</h1>
 		<h3 id = "id_contact_details" >(Contact details omitted for privacy reasons)</h3>
-		<h2>Profile</h2>
-		<p>I am a Mathematics and Computer Science student at the University of Birmingham. A methodical and results-driven individual, I am currently searching for a summer placement or internship where I can put my applied maths and/or programming skills to practical use.</p>
+		<div id = "id_profile">
+			<h2>Profile</h2>
+			<p>{{ profile_item.text }}</p>
+			<form id = "id_profile_form" method = "POST">
+				<input id = "id_profile_input_text" name = "profile_input_text" placeholder = "Enter new profile (will replace existing one)"/>
+				<button>Save</button>
+				{% csrf_token %}
+			</form>
+		</div>
 		<div id = "id_skills">
 			<h2>Key Skills</h2>
 			<ul id = "id_skills_list">

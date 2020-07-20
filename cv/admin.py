@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference
+from .models import KeySkill, Education, Experience, Volunteering, Project, Hobby, Reference, Profile
 
 # Register your models here.
 
@@ -10,3 +10,4 @@ admin.site.register(Volunteering)
 admin.site.register(Project)
 admin.site.register(Hobby)
 admin.site.register(Reference)
+admin.site.register(Profile)

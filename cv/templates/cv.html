@@ -13,7 +13,7 @@
 			<h2>Profile</h2>
 			<p>{{ profile_item.text }}</p>
 			<form id = "id_profile_form" method = "POST">
-				<input id = "id_profile_input_text" name = "profile_input_text" placeholder = "Enter new profile (will replace existing one)"/>
+				{{ profile_form }}<br>
 				<button>Save</button>
 				{% csrf_token %}
 			</form>
